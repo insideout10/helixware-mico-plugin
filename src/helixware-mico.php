@@ -78,4 +78,4 @@ function run_helixware_mico() {
 
 }
 
-run_helixware_mico();
+add_action( 'hewa_run_extensions', 'run_helixware_mico' );
