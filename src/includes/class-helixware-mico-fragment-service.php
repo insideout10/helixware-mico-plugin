@@ -10,7 +10,7 @@
  */
 class Helixware_Mico_Fragment_Service {
 
-	const FIND_BY_ASSET_GUID_PATH = '/fragments/search/findByAssetGUID?guid=%s';
+	const FIND_BY_ASSET_GUID_PATH = '/sequenceFragments/search/findByAssetGUID?guid=%s';
 
 	/**
 	 * A HAL client.
@@ -73,7 +73,7 @@ class Helixware_Mico_Fragment_Service {
 
 		$fragments = array();
 		do {
-			$fragments = array_merge( $fragments, $response->get_embedded( 'fragments' ) );
+			$fragments = array_merge( $fragments, $response->get_embedded( 'sequenceFragments' ) );
 		} while ( $response->has_next() && $response = $response->get_next() );
 
 		return $fragments;
