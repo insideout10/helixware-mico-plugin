@@ -76,13 +76,22 @@ class Helixware_Mico {
 	private $hal_client;
 
 	/**
-	 * The MICO Fragment service.
+	 * The MICO Sequence fragment service.
 	 *
-	 * @since 1.2.0
+	 * @since 1.2.1
 	 * @access private
-	 * @var \Helixware_Mico_Fragment_Service $fragment_service The MICO Fragment service.
+	 * @var \Helixware_Mico_Sequence_Service $sequence_service The MICO Sequence fragment service.
 	 */
-	private $fragment_service;
+	private $sequence_service;
+
+	/**
+	 * The MICO Face Detection fragment service.
+	 *
+	 * @since 1.2.1
+	 * @access private
+	 * @var \HelixWare_Mico_FaceDetection_Service $face_detection_service The MICO Face Detection fragment service.
+	 */
+	private $face_detection_service;
 
 	/**
 	 * The hw_fragments shortcode handler.
@@ -91,7 +100,7 @@ class Helixware_Mico {
 	 * @access private
 	 * @var \HelixWare_Mico_Fragments_Shortcode $fragments_shortcode The hw_fragments shortcode handler.
 	 */
-	private $fragments_shortcode;
+	private $face_detection_shortcode;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -148,6 +157,8 @@ class Helixware_Mico {
 		 * Load fragments from MICO.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-fragment-service.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-sequence-service.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-face-detection-service.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
@@ -163,7 +174,7 @@ class Helixware_Mico {
 		/**
 		 * The hw_fragments shortcode.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-helixware-mico-fragments-shortcode.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-helixware-mico-face-detection-shortcode.php';
 
 		$this->loader = new Helixware_Mico_Loader();
 
@@ -176,9 +187,10 @@ class Helixware_Mico {
 		$this->http_client   = new HelixWare_HTTP_Client( $http_authentication );
 		$this->hal_client    = new HelixWare_HAL_Client( $this->http_client );
 
-		$helixware                 = HelixWare::get_instance();
-		$this->fragment_service    = new Helixware_Mico_Fragment_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
-		$this->fragments_shortcode = new HelixWare_Mico_Fragments_Shortcode( $this->fragment_service, $helixware->get_asset_service(), $helixware->get_asset_image_service() );
+		$helixware                      = HelixWare::get_instance();
+		$this->sequence_service         = new Helixware_Mico_Sequence_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
+		$this->face_detection_service   = new HelixWare_Mico_Face_Detection_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
+		$this->face_detection_shortcode = new HelixWare_Mico_Face_Detection_Shortcode( $this->face_detection_service, $helixware->get_asset_service(), $helixware->get_asset_image_service() );
 
 	}
 
@@ -214,7 +226,7 @@ class Helixware_Mico {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		$this->loader->add_action( 'wp_ajax_hw_vtt_chapters', $this->fragment_service, 'ajax_vtt_chapters' );
+		$this->loader->add_action( 'wp_ajax_hw_vtt_chapters', $this->sequence_service, 'ajax_vtt_chapters' );
 
 	}
 
@@ -233,11 +245,11 @@ class Helixware_Mico {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 		// Provide an AJAX end-point to load the video chapters.
-		$this->loader->add_action( 'wp_ajax_nopriv_hw_vtt_chapters', $this->fragment_service, 'ajax_vtt_chapters' );
+		$this->loader->add_action( 'wp_ajax_nopriv_hw_vtt_chapters', $this->sequence_service, 'ajax_vtt_chapters' );
 
 		// Hook to the hewa_playlist_rss_jwplayer_header action, which is triggered when the RSS/JWPlayer
 		// playlist is generated. We add the chapters track.
-		$this->loader->add_action( 'hewa_playlist_rss_jwplayer_header', $this->fragment_service, 'playlist_rss_jwplayer_header' );
+		$this->loader->add_action( 'hewa_playlist_rss_jwplayer_header', $this->sequence_service, 'playlist_rss_jwplayer_header' );
 
 	}
 
