@@ -89,7 +89,7 @@ class Helixware_Mico {
 	 *
 	 * @since 1.2.1
 	 * @access private
-	 * @var \HelixWare_Mico_FaceDetection_Service $face_detection_service The MICO Face Detection fragment service.
+	 * @var \HelixWare_Mico_Face_Detection_Service $face_detection_service The MICO Face Detection fragment service.
 	 */
 	private $face_detection_service;
 
