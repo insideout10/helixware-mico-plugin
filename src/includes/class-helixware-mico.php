@@ -98,9 +98,18 @@ class Helixware_Mico {
 	 *
 	 * @since 1.2.0
 	 * @access private
-	 * @var \HelixWare_Mico_Fragments_Shortcode $fragments_shortcode The hw_fragments shortcode handler.
+	 * @var \HelixWare_Mico_Face_Detection_Shortcode $face_detection_shortcode The hw_fragments shortcode handler.
 	 */
 	private $face_detection_shortcode;
+
+	/**
+	 * The plugin requirements service.
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 * @var \HelixWare_Mico_Requirements_Service $requirements_service The plugin requirements service.
+	 */
+	private $requirements_service;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -154,6 +163,11 @@ class Helixware_Mico {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-i18n.php';
 
 		/**
+		 * The Log service.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-log-service.php';
+
+		/**
 		 * Load fragments from MICO.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-fragment-service.php';
@@ -164,6 +178,12 @@ class Helixware_Mico {
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-helixware-mico-admin.php';
+
+		/**
+		 * Load admin classes.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-helixware-mico-notice-service.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-helixware-mico-requirements-service.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -177,6 +197,9 @@ class Helixware_Mico {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-helixware-mico-face-detection-shortcode.php';
 
 		$this->loader = new Helixware_Mico_Loader();
+
+		$notice_service             = new HelixWare_Mico_Notice_Service();
+		$this->requirements_service = new HelixWare_Mico_Requirements_Service( $notice_service );
 
 		// Instantiate all the classes.
 		// Create the Basic authentication strategy.
@@ -227,6 +250,9 @@ class Helixware_Mico {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		$this->loader->add_action( 'wp_ajax_hw_vtt_chapters', $this->sequence_service, 'ajax_vtt_chapters' );
+
+		// Hook the requirements service.
+		$this->loader->add_action( 'admin_init', $this->requirements_service, 'admin_init' );
 
 	}
 
