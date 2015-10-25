@@ -184,6 +184,7 @@ class Helixware_Mico {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-helixware-mico-notice-service.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-helixware-mico-requirements-service.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-helixware-mico-template-service.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -214,6 +215,9 @@ class Helixware_Mico {
 		$this->sequence_service         = new Helixware_Mico_Sequence_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
 		$this->face_detection_service   = new HelixWare_Mico_Face_Detection_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
 		$this->face_detection_shortcode = new HelixWare_Mico_Face_Detection_Shortcode( $this->face_detection_service, $helixware->get_asset_service(), $helixware->get_asset_image_service() );
+
+
+		$template_service = new Helixware_Mico_Template_Service();
 
 	}
 
