@@ -43,7 +43,7 @@ class HelixWare_Mico_Face_Detection_Shortcode {
 	 *
 	 * @since    1.1.0
 	 *
-	 * @param \Helixware_Mico_Face_Detection_Service $face_detection_service The MICO Face Detection service.
+	 * @param \HelixWare_Mico_Face_Detection_Service $face_detection_service The MICO Face Detection service.
 	 * @param \HelixWare_Asset_Service $asset_service The Asset service.
 	 * @param \HelixWare_Asset_Image_Service $asset_image_service The Asset Image service.
 	 */
