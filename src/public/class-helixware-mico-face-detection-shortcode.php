@@ -79,7 +79,7 @@ class HelixWare_Mico_Face_Detection_Shortcode {
 
 		$html = "<ul>";
 		foreach ( $this->face_detection_service->get_fragments_by_id( $id ) as $fragment ) {
-			$html .= '<li style="float:left;"><img width="200" src="' . $this->asset_image_service->get_local_image_url_by_id( $id, $fragment->start / 1000, $fragment->x, $fragment->y, $fragment->width, $fragment->height ) . '" />' . $fragment->start . "($fragment->x, $fragment->y, $fragment->width, $fragment->height)" .  '</li>';
+			$html .= '<li style="float:left;"><img width="200" src="' . $this->asset_image_service->get_local_image_url_by_id( $id, $fragment->start / 1000, $fragment->width, $fragment->height, $fragment->x, $fragment->y ) . '" />' . $fragment->start . '-' . $fragment->end . "(x= $fragment->x, y= $fragment->y, w= $fragment->width, h= $fragment->height)" . '</li>';
 		}
 		$html .= "</ul>";
 

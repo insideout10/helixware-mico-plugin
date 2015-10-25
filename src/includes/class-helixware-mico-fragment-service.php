@@ -84,8 +84,10 @@ class Helixware_Mico_Fragment_Service {
 
 		$fragments = array();
 		do {
+
 			$fragments = array_merge( $fragments, $response->get_embedded( $this->fragments ) );
-		} while ( $response->has_next() && $response = $response->get_next() );
+
+		} while ( $response->has_next() && NULL !== ( $response = $response->get_next() ) );
 
 		return $fragments;
 

@@ -70,6 +70,7 @@ class Helixware_Mico_Sequence_Service extends Helixware_Mico_Fragment_Service {
 
 		$chapter_no = 0;
 		$fragments  = $this->get_fragments_by_id( $_GET['id'] );
+
 		array_walk( $fragments, function ( $fragment ) use ( &$chapter_no ) {
 
 			echo( 'chapter_' . ( ++ $chapter_no ) . "\n" );
