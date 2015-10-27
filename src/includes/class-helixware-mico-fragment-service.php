@@ -8,7 +8,7 @@
  * @subpackage Helixware_Mico/includes
  * @author     David Riccitelli <david@insideout.io>
  */
-class Helixware_Mico_Fragment_Service {
+abstract class Helixware_Mico_Fragment_Service {
 
 	const FIND_BY_ASSET_GUID_PATH = '/%s/search/findByAssetGUID?guid=%s';
 

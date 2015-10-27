@@ -14,26 +14,6 @@ class Helixware_Mico_Template_Service {
 			'admin_footer_upload'
 		) );
 
-		add_action( 'admin_footer-post.php', array(
-			$this,
-			'admin_footer_post'
-		) );
-
-	}
-
-	public function admin_footer_post() {
-
-		echo <<<EOF
-
-<script type="text/javascript">
-alert('Hello!');
-</script>
-
-EOF;
-
-		var_dump( get_post() );
-		wp_die();
-
 	}
 
 	public function admin_footer_upload() {
@@ -43,7 +23,13 @@ EOF;
 		<script type="text/html" id="tmpl-helixware-mico-attachment-details-two-column">
 			<div class="attachment-media-view {{ data.orientation }}">
 				<div class="thumbnail thumbnail-{{ data.type }}">
-					HelixWare
+
+					<a class='nav-tab nav-tab-active' href='#tab-1'>Chapters</a>
+					<a class='nav-tab' href='#tab-2'>Faces</a>
+
+					<# _.each(data.faceDetectionFragments, function(fragment){ #>
+						{{fragment.start}}
+					<# }); #>
 				</div>
 			</div>
 			<div class="attachment-info">
@@ -166,16 +152,36 @@ EOF;
 							wp.template('attachment-details-two-column'),
 							wp.template('helixware-mico-attachment-details-two-column')
 						];
+
+						view = this;
+
+						// Load the face fragments.
+						wp.ajax.post('hw_face_detection_fragments', {id: this.model.get('id')}).done(function (fragments) {
+							view.model.set({faceDetectionFragments: fragments});
+							// Finally render.
+							view.render();
+						}).fail(function () {
+							// controller.trigger('hw:media:attachment:facefragments');
+						});
+
+
 					},
 					render: function () {
 
-						// Choose the template according to the mime type.
-						this.template = helixware.isHelixWare(this.model.get('mime'))
-							? this.templates[1]
-							: this.templates[0];
+						// If it's not a HelixWare asset, just call the superclass
+						// render method on the standard template.
+						if (!helixware.isHelixWare(this.model.get('mime'))) {
+							this.template = this.templates[0];
+							// Call the superclass render.
+							TwoColumn.__super__.render.apply(this, arguments);
+							return;
+						}
 
-						// Call the superclass render.
-						TwoColumn.__super__.render.apply(this, arguments);
+						// Set the HelixWare template.
+						this.template = this.templates[1];
+
+						console.log(this.model);
+						TwoColumn.__super__.render.apply(view, arguments);
 
 					}
 

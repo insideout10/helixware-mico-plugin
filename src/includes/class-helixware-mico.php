@@ -255,6 +255,8 @@ class Helixware_Mico {
 
 		$this->loader->add_action( 'wp_ajax_hw_vtt_chapters', $this->sequence_service, 'ajax_vtt_chapters' );
 
+		$this->loader->add_action( 'wp_ajax_hw_face_detection_fragments', $this->face_detection_service, 'ajax_face_detection_fragments' );
+
 		// Hook the requirements service.
 		$this->loader->add_action( 'admin_init', $this->requirements_service, 'admin_init' );
 
