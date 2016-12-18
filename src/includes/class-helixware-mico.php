@@ -199,6 +199,9 @@ class Helixware_Mico {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-helixware-mico-admin.php';
 
+		/** Hook to the admin footer and display topics and entities related to an asset. */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-helixware-mico-admin-footer.php';
+
 		/**
 		 * Load admin classes.
 		 */
@@ -237,6 +240,7 @@ class Helixware_Mico {
 		$this->topic_service  = new HelixWare_Mico_Topic_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
 		$this->entity_service = new Helixware_Mico_Entity_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
 
+		$admin_footer = new Helixware_Mico_Admin_Footer( $this->entity_service, $this->topic_service );
 	}
 
 	/**

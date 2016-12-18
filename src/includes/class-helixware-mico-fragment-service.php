@@ -114,12 +114,12 @@ class Helixware_Mico_Fragment_Service {
 		ob_clean();
 
 		// If we don't have a valid numeric id, send an error.
-		if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
+		if ( ! isset( $_POST['id'] ) || ! is_numeric( $_POST['id'] ) ) {
 			wp_send_json_error( 'Invalid request' );
 		}
 
 		// Finally send the results of the query.
-		wp_send_json( $this->get_fragments_by_id( intval( $_GET['id'] ) ) );
+		wp_send_json_success( $this->get_fragments_by_id( intval( $_POST['id'] ) ) );
 
 	}
 
