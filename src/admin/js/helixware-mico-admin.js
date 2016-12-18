@@ -44,7 +44,7 @@
 
                     $(selector, context).empty().append(
                         $.map(data, function (item) {
-                            return $('<span class="' + className + '">' + item.label + '<a href="' + cleanReference(item.reference) + '" target="_tab">link</a></span>');
+                            return $('<span class="' + className + '">' + item.label + ' <a href="' + cleanReference(item.reference) + '" target="_tab"><i class="fa fa-external-link" aria-hidden="true"></i></a></span>');
                         })
                     );
 
@@ -68,7 +68,7 @@
                     var $this = $(this);
 
                     // Add the entities row.
-                    load('hx_entities', id, '[data-hx-mico-entities]', 'entities', $('<label class="setting" data-setting="entities">'
+                    load('hx_entities', id, '[data-hx-mico-entities]', 'entity', $('<label class="setting" data-setting="entities">'
                         + '<span class="name">Entities</span>'
                         + '<span data-hx-mico-entities="hx-mico-entities">loading...</span>'
                         + '</label>').insertAfter($this));
