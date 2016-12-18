@@ -55,7 +55,7 @@
 
         };
 
-        wp.media.events.on('hx:attachment:details:update', function (view) {
+        undefined === wp.media.events || wp.media.events.on('hx:attachment:details:update', function (view) {
 
             // Get the attachment id.
             const id = view.model.get('id');
