@@ -87,7 +87,7 @@ class Helixware_Mico_Fragment_Service {
 
 			$fragments = array_merge( $fragments, $response->get_embedded( $this->fragments ) );
 
-		} while ( $response->has_next() && NULL !== ( $response = $response->get_next() ) );
+		} while ( $response->has_next() && null !== ( $response = $response->get_next() ) );
 
 		return $fragments;
 
@@ -105,6 +105,21 @@ class Helixware_Mico_Fragment_Service {
 	public function get_fragments_by_id( $id ) {
 
 		return $this->get_fragments( $this->asset_service->get_guid( $id ) );
+
+	}
+
+	public function wp_ajax_fragments_by_id() {
+
+		// Clear anything that has been sent before this function call.
+		ob_clean();
+
+		// If we don't have a valid numeric id, send an error.
+		if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
+			wp_send_json_error( 'Invalid request' );
+		}
+
+		// Finally send the results of the query.
+		wp_send_json( $this->get_fragments_by_id( intval( $_GET['id'] ) ) );
 
 	}
 

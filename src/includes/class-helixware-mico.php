@@ -94,6 +94,24 @@ class Helixware_Mico {
 	private $face_detection_service;
 
 	/**
+	 * The MICO Topic fragment service.
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 * @var \Helixware_Mico_Topic_Service $topic_service The MICO Topic fragment service.
+	 */
+	private $topic_service;
+
+	/**
+	 * The MICO Entity fragment service.
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 * @var \Helixware_Mico_Entity_Service $entity_service The MICO Entity fragment service.
+	 */
+	private $entity_service;
+
+	/**
 	 * The hw_fragments shortcode handler.
 	 *
 	 * @since 1.2.0
@@ -173,6 +191,8 @@ class Helixware_Mico {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-fragment-service.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-sequence-service.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-face-detection-service.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-topic-service.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-helixware-mico-entity-service.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
@@ -205,7 +225,6 @@ class Helixware_Mico {
 		// Create the Basic authentication strategy.
 		// Pass the strategy to the HTTP Client.
 		// The HTTP Client is needed by the HAL Client.
-
 		$http_authentication = new HelixWare_HTTP_Client_Basic_Authentication( HELIXWARE_MICO_GW_USERNAME, HELIXWARE_MICO_GW_PASSWORD );
 		$this->http_client   = new HelixWare_HTTP_Client( $http_authentication );
 		$this->hal_client    = new HelixWare_HAL_Client( $this->http_client );
@@ -214,6 +233,9 @@ class Helixware_Mico {
 		$this->sequence_service         = new Helixware_Mico_Sequence_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
 		$this->face_detection_service   = new HelixWare_Mico_Face_Detection_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
 		$this->face_detection_shortcode = new HelixWare_Mico_Face_Detection_Shortcode( $this->face_detection_service, $helixware->get_asset_service(), $helixware->get_asset_image_service() );
+
+		$this->topic_service  = new HelixWare_Mico_Topic_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
+		$this->entity_service = new Helixware_Mico_Entity_Service( $this->hal_client, HELIXWARE_MICO_GW_URL, $helixware->get_asset_service() );
 
 	}
 
@@ -253,6 +275,10 @@ class Helixware_Mico {
 
 		// Hook the requirements service.
 		$this->loader->add_action( 'admin_init', $this->requirements_service, 'admin_init' );
+
+		// Add topics and entities actions.
+		$this->loader->add_action( 'wp_ajax_hx_topics', $this->topic_service, 'wp_ajax_fragments_by_id' );
+		$this->loader->add_action( 'wp_ajax_hx_entities', $this->entity_service, 'wp_ajax_fragments_by_id' );
 
 	}
 
